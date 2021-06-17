@@ -9,7 +9,10 @@ def geo_location(ip_address):
     """Return geolocation based on the IP address"""
     response = requests.get(f'https://ipinfo.io/{ip_address}')
     data = response.json()
-    coords = [float(coord) for coord in data['loc'].split(',')]
+    if('loc' in data.keys()):
+        coords = [float(coord) for coord in data['loc'].split(',')]
+    else:
+        coords = [40.7185, -74.0025]
     return coords
 
 def get_weather_location(coords):
@@ -26,7 +29,7 @@ def get_weather_data(woeid):
     return response.json()
 
 def weather_data(ip_address):
-    coords = geo_location(ipaddress)
+    coords = geo_location(ip_address)
     woeid = get_weather_location(coords)
     weather_data = get_weather_data(woeid)
     temperature = weather_data['consolidated_weather'][0]['the_temp']
